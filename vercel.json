@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "buildCommand": "cd packages/frontend && yarn install && yarn build",
+  "buildCommand": "yarn install && yarn build",
   "outputDirectory": "packages/frontend/.next",
   "framework": "nextjs",
   "env": {
