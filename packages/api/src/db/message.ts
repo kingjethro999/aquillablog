@@ -7,10 +7,10 @@ export const getConversations = async (authUserId: string): Promise<any> => {
       $match: {
         $or: [
           {
-            receiver: mongoose.Types.ObjectId(authUserId),
+            receiver: new mongoose.Types.ObjectId(authUserId),
           },
           {
-            sender: mongoose.Types.ObjectId(authUserId),
+            sender: new mongoose.Types.ObjectId(authUserId),
           },
         ],
       },
@@ -110,13 +110,15 @@ export const getMessages = async (authUserId: string, userId: string): Promise<a
 };
 
 export const createMessage = async (message: string, sender: string, receiver: string): Promise<any> => {
-  let newMessage = await new Message({
+  const newMessage = await Message.create({
     message,
     sender,
     receiver,
-  }).save();
+  });
 
-  newMessage = await newMessage.populate('sender').populate('receiver').execPopulate();
+  const populatedMessage = await Message.findById(newMessage._id)
+    .populate('sender')
+    .populate('receiver');
 
   // Check if user already had a conversation. If not push their ids to users collection.
   const senderUser = await User.findById(sender);
@@ -125,7 +127,7 @@ export const createMessage = async (message: string, sender: string, receiver: s
     await User.findOneAndUpdate({ _id: receiver }, { $push: { messages: sender } });
   }
 
-  return newMessage;
+  return populatedMessage;
 };
 
 export const updateMessageSeen = async (sender: string, receiver: string): Promise<any> => {

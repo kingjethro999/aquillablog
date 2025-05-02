@@ -38,7 +38,7 @@ const createOrUpdateUser = async (profile: SocialProfile, provider: SocialProvid
         fields.coverImage = profile.coverImage;
       }
 
-      const updatedUser = await updateUser(user._id, fields);
+      const updatedUser = await updateUser(user._id.toString(), fields);
       return updatedUser;
     }
   }
