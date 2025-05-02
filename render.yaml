@@ -1,0 +1,17 @@
+services:
+  - type: web
+    name: aquilablog-api
+    env: node
+    buildCommand: cd packages/api && yarn install && yarn build
+    startCommand: cd packages/api && yarn start:prod
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
+      - key: DATABASE_URL
+        sync: false
+      - key: JWT_SECRET
+        sync: false
+      - key: COOKIE_SECRET
+        sync: false 
