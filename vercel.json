@@ -1,9 +1,0 @@
-{
-  "rootDirectory": "packages/frontend",
-  "buildCommand": "yarn install && yarn build",
-  "outputDirectory": ".next",
-  "framework": "nextjs",
-  "env": {
-    "NEXT_PUBLIC_API_URL": "https://aquilablog-api.onrender.com"
-  }
-} 
