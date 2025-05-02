@@ -3,7 +3,7 @@ services:
     name: aquilablog-api
     env: node
     buildCommand: cd packages/api && yarn install && yarn build
-    startCommand: cd packages/api && yarn start:prod
+    startCommand: cd packages/api && yarn start
     envVars:
       - key: NODE_ENV
         value: production
