@@ -18,6 +18,9 @@ const app = express();
 
 app.use(compression());
 app.use(cookieParser());
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
 app.use(
   cors({
     origin: ['https://aquillablog.vercel.app', process.env.FRONTEND_URL],
@@ -28,10 +31,18 @@ app.use(
 );
 
 app.use(passport.initialize());
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-
 app.use('/', routes);
+
+// Error handling middleware
+app.use((err: any, req: express.Request, res: express.Response, next: express.NextFunction) => {
+  console.error(err.stack);
+  res.status(500).send('Something broke!');
+});
+
+// Handle 404
+app.use((req: express.Request, res: express.Response) => {
+  res.status(404).send('Not Found');
+});
 
 const httpServer = createServer(app);
 socket(httpServer);
