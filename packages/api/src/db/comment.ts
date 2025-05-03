@@ -15,7 +15,9 @@ export const createComment = async (comment: string, authorId: string, postId: s
     post: postId,
   }).save();
 
-  await newComment.populate('author').execPopulate();
+  await newComment.populate([
+    { path: 'author', select: '-password' }
+  ]);
 
   // Push the comment to post and user collection.
   await Post.findOneAndUpdate({ _id: postId }, { $push: { comments: newComment._id } });

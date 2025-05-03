@@ -1,3 +1,3 @@
 export const MaxImageSize = {
-  Post: 3000000,
+  Post: 30000000,
 };

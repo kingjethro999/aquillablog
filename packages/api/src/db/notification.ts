@@ -67,12 +67,12 @@ export const createNotification = async (
   // Push the notification to the user collection.
   await User.findOneAndUpdate({ _id: userId }, { $push: { notifications: newNotification._id } });
 
-  newNotification = await newNotification
-    .populate('author')
-    .populate('follow')
-    .populate({ path: 'comment', populate: { path: 'post' } })
-    .populate({ path: 'like', populate: { path: 'post' } })
-    .execPopulate();
+  newNotification = await newNotification.populate([
+    { path: 'author', select: '-password' },
+    { path: 'follow' },
+    { path: 'comment', populate: { path: 'post' } },
+    { path: 'like', populate: { path: 'post' } }
+  ]);
 
   return newNotification;
 };

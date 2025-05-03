@@ -150,7 +150,10 @@ export const createPost = async (
     author: authorId,
   }).save();
 
-  await newPost.populate('channel').populate('author').execPopulate();
+  await newPost.populate([
+    { path: 'channel' },
+    { path: 'author', select: '-password' }
+  ]);
 
   // Push Post to Channel collection.
   await Channel.findOneAndUpdate({ _id: channelId }, { $push: { posts: newPost._id } });
