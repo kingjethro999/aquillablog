@@ -140,7 +140,9 @@ export const createPost = async (
   imageUrl: string,
   imagePublicId: string,
   channelId: string,
-  authorId: string
+  authorId: string,
+  hashtags: string[] = [],
+  mentions: string[] = []
 ): Promise<any> => {
   const newPost = await new Post({
     title,
@@ -148,6 +150,8 @@ export const createPost = async (
     imagePublicId,
     channel: channelId,
     author: authorId,
+    hashtags,
+    mentions
   }).save();
 
   await newPost.populate([
@@ -277,4 +281,46 @@ export const pinPost = async (id: string, pinned: boolean): Promise<any> => {
     });
 
   return updatedPost;
+};
+
+export const getPosts = async ({ hashtags, mentions, offset = 0, limit = 10 }): Promise<any> => {
+  const query: any = {};
+  
+  if (hashtags) {
+    query.hashtags = hashtags;
+  }
+  
+  if (mentions) {
+    const user = await User.findOne({ username: mentions });
+    if (user) {
+      query.mentions = user._id;
+    }
+  }
+
+  const posts = await Post.find(query)
+    .populate({
+      path: 'author',
+      select: '-password',
+      populate: [
+        {
+          path: 'notifications',
+          populate: [{ path: 'author', select: '-password' }, { path: 'like' }, { path: 'comment' }],
+        },
+      ],
+    })
+    .populate('likes')
+    .populate({
+      path: 'comments',
+      options: { sort: { createdAt: 'asc' } },
+      populate: { path: 'author', select: '-password' },
+    })
+    .populate('channel')
+    .skip(offset)
+    .limit(limit)
+    .sort([
+      ['pinned', -1],
+      ['createdAt', -1],
+    ]);
+
+  return posts.filter((p: any) => p?.author?.banned !== true);
 };

@@ -34,7 +34,22 @@ export const searchAll = async (searchQuery: string, authUserId?: string): Promi
   }
 
   const users = await searchUsers(searchQuery, authUserId);
-  const posts = await Post.find({ title: new RegExp(searchQuery, 'i') }).limit(50);
+  
+  // If the search query starts with #, only search in hashtags
+  if (searchQuery.startsWith('#')) {
+    const hashtag = searchQuery.slice(1).toLowerCase();
+    const posts = await Post.find({ hashtags: { $in: [hashtag] } }).limit(50);
+    return posts.sort((a: any, b: any) => a.createdAt - b.createdAt);
+  }
+
+  // Otherwise search in title and content
+  const posts = await Post.find({
+    $or: [
+      { title: new RegExp(searchQuery, 'i') },
+      { content: new RegExp(searchQuery, 'i') }
+    ]
+  }).limit(50);
+  
   const result = [...users, ...posts];
   return result.sort((a: any, b: any) => a.createdAt - b.createdAt);
 };
