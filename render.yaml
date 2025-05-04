@@ -2,7 +2,7 @@ services:
   - type: web
     name: aquillablog-api
     env: node
-    buildCommand: cd packages/api && npm install && npm run build && node createSuperAdmin.js jethrojerrybj@gmail.com
+    buildCommand: cd packages/api && npm install && npm run build
     startCommand: cd packages/api && npm start
     envVars:
       - key: NODE_ENV
