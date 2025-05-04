@@ -2,25 +2,31 @@
   "name": "aquilablog",
   "version": "1.0.0",
   "private": true,
-  "scripts": {
-    "build": "lerna run build",
-    "dev": "lerna run dev --stream",
-    "prepare": "husky install",
-    "lint": "lerna run lint",
-    "ts:check": "lerna run ts:check",
-    "create-super-admin": "node ./packages/api/createSuperAdmin.js"
-  },
   "workspaces": [
     "packages/*"
   ],
-  "engines": {
-    "node": ">=12.20.0"
+  "scripts": {
+    "dev": "concurrently \"npm run dev:api\" \"npm run dev:frontend\"",
+    "dev:api": "cd packages/api && npm run dev",
+    "dev:frontend": "cd packages/frontend && npm run dev",
+    "build": "concurrently \"npm run build:api\" \"npm run build:frontend\"",
+    "build:api": "cd packages/api && npm run build",
+    "build:frontend": "cd packages/frontend && npm run build",
+    "start": "concurrently \"npm run start:api\" \"npm run start:frontend\"",
+    "start:api": "cd packages/api && npm run start",
+    "start:frontend": "cd packages/frontend && npm run start",
+    "lint": "concurrently \"npm run lint:api\" \"npm run lint:frontend\"",
+    "lint:api": "cd packages/api && npm run lint",
+    "lint:frontend": "cd packages/frontend && npm run lint",
+    "test": "concurrently \"npm run test:api\" \"npm run test:frontend\"",
+    "test:api": "cd packages/api && npm run test",
+    "test:frontend": "cd packages/frontend && npm run test"
   },
   "devDependencies": {
-    "husky": "^7.0.1",
-    "lerna": "^3.22.1",
-    "lint-staged": "^11.1.0",
-    "prettier": "^2.1.2"
+    "concurrently": "^5.3.0"
+  },
+  "engines": {
+    "node": ">=12.20.0"
   },
   "lint-staged": {
     "**/*.{ts,tsx,js,jsx,md,json,html}": [
