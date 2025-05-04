@@ -29,9 +29,10 @@ setInterval(async () => {
 export default (httpServer) => {
   const io = new Server(httpServer, {
     cors: {
-      origin: process.env.FRONTEND_URL,
-      methods: ['GET', 'POST'],
+      origin: ['https://aquillablog.vercel.app', process.env.FRONTEND_URL],
+      methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
       credentials: true,
+      allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept'],
     },
   });
 
