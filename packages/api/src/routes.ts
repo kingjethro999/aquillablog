@@ -85,6 +85,9 @@ router.post('/posts/create', checkIfUser, multerUpload.single('image'), PostCont
 router.put('/posts/update', checkIfUser, multerUpload.single('image'), PostController.update);
 router.delete('/posts/delete', checkIfUser, PostController.delete);
 router.post('/posts/pin', checkIfSuperAdmin, PostController.pin);
+router.get('/posts/hashtag/:hashtag', checkIfUser, PostController.searchByHashtag);
+router.get('/posts/mentions/:username', checkIfUser, PostController.searchByMention);
+router.get('/users/suggestions', checkIfUser, PostController.getUserSuggestions);
 
 /**
  * Likes

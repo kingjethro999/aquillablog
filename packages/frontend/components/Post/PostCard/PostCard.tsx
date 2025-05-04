@@ -28,6 +28,8 @@ import PostCreate from '../../PostCreate';
 import Like from '../../Like';
 import SeeMore from '../../SeeMore';
 import Linkify from '../../Linkify';
+import Hashtag from '../Hashtag/Hashtag';
+import Mention from '../Mention/Mention';
 
 interface PostCardProps {
   post: Post;
@@ -70,7 +72,14 @@ const PostCard: FC<PostCardProps> = ({
 
   const postCardTitle = (
     <Title>
-      <SeeMore>{post.title}</SeeMore>
+      {post.title.split(/(#\w+|@\w+)/g).map((part, index) => {
+        if (part.startsWith('#')) {
+          return <Hashtag key={index} tag={part.slice(1)} />;
+        } else if (part.startsWith('@')) {
+          return <Mention key={index} username={part.slice(1)} />;
+        }
+        return part;
+      })}
     </Title>
   );
 

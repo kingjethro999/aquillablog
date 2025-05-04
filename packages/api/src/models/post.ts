@@ -4,28 +4,48 @@ const Schema = mongoose.Schema;
 
 const PostSchema = new Schema(
   {
-    title: String,
-    image: String,
-    imagePublicId: String,
+    title: {
+      type: String,
+      required: true,
+    },
+    author: {
+      type: Schema.Types.ObjectId,
+      ref: 'User',
+      required: true,
+    },
+    image: {
+      type: String,
+    },
+    imagePublicId: {
+      type: String,
+    },
     pinned: Boolean,
     channel: {
       type: Schema.Types.ObjectId,
       ref: 'Channel',
     },
-    author: {
-      type: Schema.Types.ObjectId,
-      ref: 'User',
-    },
     likes: [
       {
         type: Schema.Types.ObjectId,
-        ref: 'Like',
+        ref: 'User',
       },
     ],
     comments: [
       {
         type: Schema.Types.ObjectId,
         ref: 'Comment',
+      },
+    ],
+    hashtags: [
+      {
+        type: String,
+        lowercase: true,
+      },
+    ],
+    mentions: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: 'User',
       },
     ],
   },
